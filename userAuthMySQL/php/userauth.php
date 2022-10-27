@@ -5,11 +5,13 @@ require_once "../config.php";
 //register users
 function registerUser($fullnames, $email, $password, $gender, $country){
     //create a connection variable using the db function in config.php
-    $conn = db();
+    $conn = db('students');
 
     $sql = "INSERT INTO `students` (`full_names`,`email`,`password`,`gender`,`country`)"
      VALUES ('$fullnames','$email','$password','$gender','$country')";
-    if(mysqli_query($conn, $sql)){
+
+    if(mysqli_query($conn, $sql))
+    {
         echo "<script> alert('user sucessfully created!!')</script>
     }
 
@@ -21,6 +23,16 @@ function registerUser($fullnames, $email, $password, $gender, $country){
 function loginUser($email, $password){
     //create a connection variable using the db function in config.php
     $conn = db();
+    $query = "SELECT * FROM students WHERE email='$email' AND password='$password'"
+    $result =mysqli_query($conn, $query);
+    if(mysqli_num_rows($result) >= 1){
+        session_start();
+        $_SESSION['username'] =$email;
+        header("location: ../dashboard.php")
+    }
+    else{
+        header("location: ''/forms/login.php?message=invalid");
+    }
 
     echo "<h1 style='color: red'> LOG ME IN (IMPLEMENT ME) </h1>";
     //open connection to the database and check if username exist in the database
@@ -32,6 +44,15 @@ function loginUser($email, $password){
 function resetPassword($email, $password){
     //create a connection variable using the db function in config.php
     $conn = db();
+    if(mysqli_num_rows($conn, "SELECT * FROM students WHERE email='$email'"))>=1{
+        $sql = "UPDATE table set password 'where email='$email'";
+        if(mysqli_query($conn, $sql)){
+            echo "<script> alert ('password successfully updated!!')" </script>;
+        }
+    }
+
+    
+
     echo "<h1 style='color: red'>RESET YOUR PASSWORD (IMPLEMENT ME)</h1>";
     //open connection to the database and check if username exist in the database
     //if it does, replace the password with $password given
