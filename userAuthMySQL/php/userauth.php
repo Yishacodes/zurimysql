@@ -49,7 +49,9 @@ function resetPassword($email, $password){
         if(mysqli_query($conn, $sql)){
             echo "<script> alert ('password successfully updated!!')" </script>;
         }
-    }
+        else{
+            echo '<script> ("An Error Occured please try again'</script>;
+        }
 
     
 
